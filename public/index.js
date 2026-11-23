@@ -34,6 +34,19 @@ scramjet.init();
 
 const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 
+const launchUrl = new URLSearchParams(location.search).get("url");
+if (launchUrl) {
+	try {
+		const destination = new URL(launchUrl);
+		if (destination.protocol === "https:" || destination.protocol === "http:") {
+			address.value = destination.href;
+			window.addEventListener("load", () => form.requestSubmit(), { once: true });
+		}
+	} catch (err) {
+		// Ignore invalid launch URLs and keep the normal search form available.
+	}
+}
+
 form.addEventListener("submit", async (event) => {
 	event.preventDefault();
 
